@@ -1,0 +1,13 @@
+# path-to-your-query/your-query.graphql
+
+query FETCH_DATA_QUERY {
+  yourTable {
+    id
+    name
+    # Add other fields you want to retrieve
+  }
+}
+
+query OTHER_QUERY {
+  # Another GraphQL query
+}

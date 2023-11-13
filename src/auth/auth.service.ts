@@ -1,16 +1,30 @@
 import { Injectable } from "@nestjs/common";
-import axios from "axios";
+import { AuthDto } from "./dto";
+import * as argon from 'argon2';
+
+
 
 @Injectable()
 export class AuthService{
+
+    async signup(dto: AuthDto){
+
+      //generate the password hash
+      const hash = argon.hash(dto.password);
+
+      //save the new user in the db
+      const user = 
+      //return the saved user
+
+      FETCH_DATA_QUERY
+      
+      return { msg: 'i am signed up'}
+    }
 
     signin(){
         return { msg: 'i am signed in'}
     }
 
-    signup(){
-        return { msg: 'i am signed up'}
-    }
     
 
     /*
