@@ -1,14 +1,16 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { AuthDto } from "./dto";
 import * as argon from 'argon2';
-import { HasuraResolver } from "src/hasura/hasura.resolver";
+import { GRAPHQL_CLIENT } from "src/nest-graphql-client/src/constants";
+import { GraphQLClient } from "graphql-request";
+import { twitterUsers } from "./queries/twitter-users";
 
 
 
 @Injectable()
 export class AuthService{
 
-  constructor(private hasuraResolver: HasuraResolver){}
+  constructor(@Inject(GRAPHQL_CLIENT) private readonly graphqlClient: GraphQLClient){}
 
     async signup(dto: AuthDto){
 
@@ -16,7 +18,7 @@ export class AuthService{
       const hash = argon.hash(dto.password);
 
       //save the new user in the db
-      const user = await this.hasuraResolver.yourQuery();
+      const user = await this.graphqlClient.request<string>(twitterUsers);
       //return the saved user
 
       console.log(user)
