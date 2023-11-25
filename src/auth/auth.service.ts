@@ -3,7 +3,7 @@ import { AuthDto } from "./dto";
 import * as argon from 'argon2';
 import { GRAPHQL_CLIENT } from "src/nest-graphql-client/src/constants";
 import { GraphQLClient } from "graphql-request";
-import { twitterUsers } from "./queries/twitter-users";
+import { findUser, insertTwitterUsers } from "./queries/twitter-users";
 
 
 
@@ -14,20 +14,34 @@ export class AuthService{
 
     async signup(dto: AuthDto){
 
-      //generate the password hash
-      const hash = argon.hash(dto.password);
+      try{
+        //generate the password hash
+      dto.password = await argon.hash(dto.password);
 
+      
       //save the new user in the db
-      const user = await this.graphqlClient.request<string>(twitterUsers);
-      //return the saved user
+      const user = await this.graphqlClient.request<string>(insertTwitterUsers, {...dto});
 
+      //return the saved user
       console.log(user)
+
+      }
+      catch(error){
+        console.log(error)
+      }
+
+      
       
       return { msg: 'i am signed up'}
     }
 
-    signin(){
-        return { msg: 'i am signed in'}
+    async signin(dto: AuthDto){
+
+      const user = await this.graphqlClient.request<string>(findUser);
+
+
+
+      return { msg: 'i am signed in'}
     }
 
     
